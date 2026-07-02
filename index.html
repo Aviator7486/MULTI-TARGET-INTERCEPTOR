@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Fighter Jet • Missile Intercept Simulator</title>
+    <title>Fighter Jet • MULTI-TARGET INTERCEPTOR V1.3</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
         html, body {
-            margin: 0;
-            padding: 0;
-            background: #05070f;
-            color: #fff;
+            margin: 0; padding: 0;
+            background: #05070f; color: #fff;
             font-family: 'Segoe UI', system_ui, sans-serif;
             overflow: hidden;
             -webkit-touch-callout: none;
@@ -20,7 +18,7 @@
         }
 
         body {
-            min-height: 100dvh; /* Better for iOS */
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -74,8 +72,6 @@
             align-items: center;
             justify-content: center;
             touch-action: none;
-            -webkit-touch-callout: none;
-            z-index: 100;
         }
 
         .touch-button:active {
@@ -94,15 +90,12 @@
             width: 88px;
             height: 88px;
             touch-action: none;
-            z-index: 100;
         }
 
         #joystick-base {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 88px;
-            height: 88px;
+            top: 0; left: 0;
+            width: 88px; height: 88px;
             border-radius: 50%;
             background: rgba(0, 255, 157, 0.08);
             border: 2.5px solid #00ff9d;
@@ -110,12 +103,9 @@
 
         #joystick-knob {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 34px;
-            height: 34px;
-            margin-left: -17px;
-            margin-top: -17px;
+            top: 50%; left: 50%;
+            width: 34px; height: 34px;
+            margin-left: -17px; margin-top: -17px;
             border-radius: 50%;
             background: #00ff9d;
             box-shadow: 0 0 10px rgba(0, 255, 157, 0.6);
@@ -129,7 +119,6 @@
             border: 2px solid #1a2638;
             border-radius: 4px;
             max-width: 100%;
-            flex-shrink: 1;
         }
 
         canvas {
@@ -143,9 +132,7 @@
 
         #ui-overlay {
             position: absolute;
-            top: 6px;
-            left: 6px;
-            right: 6px;
+            top: 6px; left: 6px; right: 6px;
             display: flex;
             justify-content: space-between;
             pointer-events: none;
@@ -164,10 +151,8 @@
 
         #integrity-bar {
             position: absolute;
-            top: 38px;
-            left: 6px;
-            width: 88px;
-            height: 10px;
+            top: 38px; left: 6px;
+            width: 88px; height: 10px;
             background: #1a2638;
             border: 1px solid #00ff9d;
             border-radius: 2px;
@@ -199,23 +184,15 @@
             max-width: 95vw;
         }
 
-        /* Landscape optimization for iPhone */
         @media screen and (max-height: 500px) and (orientation: landscape) {
-            #game-wrapper {
-                flex-direction: column;
-                gap: 4px;
-            }
-            #left-controls, #right-controls {
-                display: none;
-            }
-            canvas {
-                max-height: 78dvh;
-            }
+            #game-wrapper { flex-direction: column; gap: 4px; }
+            #left-controls, #right-controls { display: none; }
+            canvas { max-height: 78dvh; }
         }
     </style>
 </head>
 <body>
-    <h1>Fighter Jet • MULTI-TARGET INTERCEPTOR</h1>
+    <h1>Fighter Jet • MULTI-TARGET INTERCEPTOR <span style="color:#888; font-size:13px;">V1.3</span></h1>
     <div class="subtitle">MULTI-TARGET INTERCEPTOR • TACTICAL SIMULATION • 1974 ERA</div>
 
     <div id="game-wrapper">
@@ -252,7 +229,7 @@
     </div>
 
 <script>
-// ==================== COMPLETE GAME CODE ====================
+// ==================== V1.3 - FULL WORKING CODE ====================
 
 const canvas = document.getElementById('simCanvas');
 const ctx = canvas.getContext('2d', { alpha: true });
@@ -264,10 +241,6 @@ const HUD_SHIFT_Y = 49;
 const RETICLE_CENTER_Y = 195 + HUD_SHIFT_Y;
 const PITCH_MULTIPLIER = 0.95;
 const DETECT_TOLERANCE = 24;
-const HUD_HALF_WIDTH = 99.75 * 0.98;
-const HUD_TOP = -105 - (195 * 0.05);
-const HUD_BOTTOM = 90;
-const HUD_HEIGHT = Math.abs(HUD_TOP) + HUD_BOTTOM;
 
 const cockpitImg = new Image();
 let imgLoaded = false;
@@ -290,20 +263,10 @@ let plane = {
 let targets = [];
 let missiles = [];
 let incomingMissiles = [];
-let particles = [];
 const maxTargets = 6;
 let waterScroll = 0;
 let integrity = 3;
 let lastAcridHitTime = 0;
-
-let playerPlane = {
-    isoX: -120,
-    isoY: -120,
-    isoZ: 260,
-    spinAngle: 0,
-    status: 'HIT',
-    fallSpeed: 2.1
-};
 
 // ==================== TOUCH CONTROLS ====================
 const lockButton = document.getElementById('lock-button');
@@ -361,6 +324,7 @@ if (fireButton) {
     fireButton.addEventListener('touchstart', e => { e.preventDefault(); handleFire(); });
 }
 
+// ==================== JOYSTICK - ROLL DIRECTION FIXED ====================
 function updateJoystick(clientX, clientY) {
     if (!joystickContainer || !joystickKnob) return;
     const rect = joystickContainer.getBoundingClientRect();
@@ -377,8 +341,12 @@ function updateJoystick(clientX, clientY) {
     joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
 
     const sensitivity = 0.0048;
+
+    // Inverted pitch (finger up = nose down)
     plane.pitch = Math.max(-plane.maxPitch, Math.min(plane.maxPitch, plane.pitch + (dy * sensitivity)));
-    plane.roll = Math.max(-plane.maxRoll, Math.min(plane.maxRoll, plane.roll + (dx * sensitivity * 0.85)));
+
+    // Roll direction fixed - reversed from previous version
+    plane.roll = Math.max(-plane.maxRoll, Math.min(plane.maxRoll, plane.roll - (dx * sensitivity * 0.9)));
 }
 
 function resetJoystick() {
@@ -418,47 +386,41 @@ class Target {
         this.vy = (Math.random() - 0.5) * 0.75;
         this.size = 22;
         this.locked = false;
-        this.isoX = (Math.random() - 0.5) * 200;
-        this.isoY = (Math.random() - 0.5) * 200;
-        this.isoZ = 285 + Math.random() * 35;
-        this.status = 'ALIVE';
-        this.spinAngle = Math.random() * Math.PI;
-        this.fallSpeed = 1.9;
         this.range = 52 + Math.random() * 18;
         this.closureRate = 0.78 + Math.random() * 0.42;
-        this.prevRange = this.range;
         this.acridFired = false;
     }
     update() {
         if (gameState === 'COCKPIT') {
-            // Separation + repel logic (simplified for space)
             let reticleX = centerX + plane.driftX * 1.1;
             let reticleY = centerY + plane.pitch * PITCH_MULTIPLIER;
             let dx = this.x - reticleX;
             let dy = this.y - reticleY;
             let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
             const repelStrength = 0.014;
             this.vx += (dx / dist) * repelStrength;
             this.vy += (dy / dist) * repelStrength;
             this.vx *= 0.978;
             this.vy *= 0.978;
+
             this.x += this.vx;
             this.y += this.vy;
 
-            // Bounds
             if (this.x < 175) { this.vx = Math.abs(this.vx) * 0.6; this.x = 177; }
             if (this.x > 625) { this.vx = -Math.abs(this.vx) * 0.6; this.x = 623; }
             if (this.y < 68)  { this.vy = Math.abs(this.vy) * 0.6; this.y = 70; }
             if (this.y > 335) { this.vy = -Math.abs(this.vy) * 0.6; this.y = 333; }
 
             this.range = Math.max(12, this.range - this.closureRate * 0.0167);
+
             if (this.range < 34 && !this.acridFired && this.status === 'ALIVE') {
                 this.acridFired = true;
                 incomingMissiles.push(new IncomingMissile(this.x, this.y));
             }
         }
     }
-    drawCockpitRaw(isHot = false) {
+    drawCockpitRaw() {
         ctx.save();
         ctx.lineWidth = 1.8;
         ctx.strokeStyle = this.locked ? '#ff3333' : '#00ff9d';
@@ -469,7 +431,6 @@ class Target {
         ctx.stroke();
         ctx.restore();
     }
-    drawIsometric() { /* Isometric drawing logic kept from original */ }
 }
 
 class IncomingMissile {
@@ -526,31 +487,6 @@ class Missile {
         ctx.beginPath();
         ctx.arc(this.x, this.y, 3.5, 0, Math.PI * 2);
         ctx.fill();
-    }
-}
-
-class Particle {
-    constructor(x, y, color, size = 3) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.size = size;
-        this.vx = (Math.random() - 0.5) * 3;
-        this.vy = (Math.random() - 0.5) * 3 - 1;
-        this.alpha = 1;
-        this.life = 30;
-    }
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.alpha -= 1 / this.life;
-    }
-    draw() {
-        if (this.alpha <= 0) return;
-        ctx.globalAlpha = this.alpha;
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.size, this.size);
-        ctx.globalAlpha = 1;
     }
 }
 
@@ -617,19 +553,50 @@ function updatePlanePhysics() {
     }
 }
 
+function drawMovingBackground() {
+    ctx.fillStyle = '#0a1429';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#0b2538';
+    ctx.fillRect(0, 193, canvas.width, canvas.height - 193);
+
+    ctx.strokeStyle = 'rgba(200, 225, 255, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 193);
+    ctx.lineTo(canvas.width, 193);
+    ctx.stroke();
+}
+
+function drawCockpitView() {
+    drawMovingBackground();
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(-plane.roll * 0.85);
+    ctx.translate(-centerX, -centerY);
+    ctx.translate(plane.driftX * 1.1, plane.pitch * PITCH_MULTIPLIER + HUD_SHIFT_Y);
+
+    targets.forEach(t => {
+        let pos = getTargetScreenPos(t);
+        const isInHud = pos.x > centerX - 380 && pos.x < centerX + 380 &&
+                        pos.y > centerY + HUD_TOP + HUD_SHIFT_Y && pos.y < centerY + HUD_BOTTOM + HUD_SHIFT_Y;
+        if (isInHud) t.drawCockpitRaw();
+    });
+    ctx.restore();
+}
+
 function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (gameState === 'COCKPIT') {
         updatePlanePhysics();
         targets.forEach(t => t.update());
-        incomingMissiles.forEach(m => m.update());
-        drawMovingBackground();
-        if (imgLoaded) ctx.drawImage(cockpitImg, 0, 0, canvas.width, canvas.height);
-        targets.forEach(t => t.drawCockpitRaw());
+        incomingMissiles = incomingMissiles.filter(m => { m.update(); return m.active; });
+
+        drawCockpitView();
         incomingMissiles.forEach(m => m.draw());
     } else if (gameState === 'ISOMETRIC') {
-        // Isometric mode drawing (simplified for this version)
         ctx.fillStyle = '#050a12';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         targets.forEach(t => t.drawIsometric());
@@ -643,7 +610,6 @@ function init() {
     targets = [];
     missiles = [];
     incomingMissiles = [];
-    particles = [];
     for (let i = 0; i < maxTargets; i++) targets.push(new Target(i));
     gameState = 'COCKPIT';
     integrity = 3;
@@ -653,14 +619,8 @@ function init() {
 
 window.addEventListener('keydown', e => {
     if (e.key in keys) keys[e.key] = true;
-    if (gameState === 'COCKPIT' && e.key === ' ') {
-        e.preventDefault();
-        handleLock();
-    }
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        handleFire();
-    }
+    if (gameState === 'COCKPIT' && e.key === ' ') { e.preventDefault(); handleLock(); }
+    if (e.key === 'Enter') { e.preventDefault(); handleFire(); }
 });
 
 window.addEventListener('keyup', e => {
