@@ -7,67 +7,84 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             background: #05070f;
             color: #fff;
-            font-family: 'Segoe UI', system_ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            min-height: 100dvh; /* Fixes iOS Safari address bar jump */
             overflow: hidden;
+            -webkit-text-size-adjust: 100%;
         }
 
         h1 {
-            margin: 6px 0 2px;
-            font-size: 18px;
+            margin: 10px 0 2px;
+            font-size: 16px;
             letter-spacing: 2px;
             color: #00ff9d;
+            text-align: center;
         }
 
         .subtitle {
-            font-size: 10px;
+            font-size: 9px;
             color: #5a6b7c;
             letter-spacing: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            text-align: center;
         }
 
+        /* Responsive Wrapper: Stacks components gracefully on mobile screens */
         #game-wrapper {
             display: flex;
+            flex-flow: row wrap;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             width: 100%;
             max-width: 100vw;
-            padding: 0 5px;
+            padding: 0 10px;
             box-sizing: border-box;
         }
 
         #left-controls, #right-controls {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 10px;
-            width: 85px;
+            justify-content: center;
+            gap: 15px;
+            width: auto;
+        }
+
+        /* Optimization for landscape / wide layouts */
+        @media screen and (min-width: 980px) {
+            #left-controls, #right-controls {
+                flex-direction: column;
+                width: 95px;
+            }
         }
 
         .touch-button {
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             background: rgba(0, 255, 157, 0.15);
             border: 2.5px solid #00ff9d;
             color: #00ff9d;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
+            -webkit-user-select: none; /* Prevents selection callouts on iOS */
+            -webkit-touch-callout: none;
             touch-action: none;
             z-index: 100;
         }
@@ -89,9 +106,10 @@
 
         #joystick-container {
             position: relative;
-            width: 95px;
-            height: 95px;
+            width: 90px;
+            height: 90px;
             touch-action: none;
+            -webkit-user-select: none;
             z-index: 100;
         }
 
@@ -99,25 +117,25 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 95px;
-            height: 95px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             background: rgba(0, 255, 157, 0.1);
             border: 2.5px solid #00ff9d;
+            box-sizing: border-box;
         }
 
         #joystick-knob {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 36px;
-            height: 36px;
-            margin-left: -18px;
-            margin-top: -18px;
+            width: 34px;
+            height: 34px;
+            margin-left: -17px;
+            margin-top: -17px;
             border-radius: 50%;
             background: #00ff9d;
             box-shadow: 0 0 12px rgba(0, 255, 157, 0.6);
-            transition: transform 0.05s;
             pointer-events: none;
         }
 
@@ -127,12 +145,13 @@
             border: 2px solid #1a2638;
             border-radius: 4px;
             max-width: 100%;
+            background: #050811;
         }
 
         canvas {
-            background: #050811;
             display: block;
             border-radius: 2px;
+            image-rendering: -webkit-optimize-contrast; /* Clear lines on iOS Safari */
             image-rendering: crisp-edges;
             max-width: 100%;
             height: auto;
@@ -147,7 +166,6 @@
             justify-content: space-between;
             pointer-events: none;
             z-index: 10;
-            font-size: 11px;
         }
 
         .ui-box {
@@ -180,7 +198,7 @@
         }
 
         #controls-tip {
-            margin-top: 6px;
+            margin-top: 8px;
             text-align: center;
             color: #7a8a9e;
             font-size: 11px;
@@ -194,30 +212,16 @@
             border: 1px solid #22334a;
             padding: 5px 10px;
             border-radius: 4px;
-            margin: 5px 0;
+            margin: 6px 0;
             color: #8fa0b5;
+            text-align: center;
             max-width: 95vw;
         }
 
-        /* ========== LANDSCAPE MODE ON PHONES ========== */
         @media screen and (max-height: 500px) and (orientation: landscape) {
-            #game-wrapper {
-                flex-direction: column;
-                gap: 6px;
-            }
-            
-            #left-controls, #right-controls {
-                display: none; /* Hide side controls in landscape to give game more space */
-            }
-            
             canvas {
-                max-height: 82vh;
+                max-height: 70vh;
                 width: auto !important;
-            }
-            
-            #controls-tip {
-                font-size: 10px;
-                margin-top: 2px;
             }
         }
     </style>
@@ -227,12 +231,10 @@
     <div class="subtitle">MULTI-TARGET INTERCEPTOR • TACTICAL SIMULATION • 1974 ERA</div>
 
     <div id="game-wrapper">
-        <!-- LEFT: LOCK -->
         <div id="left-controls">
             <div id="lock-button" class="touch-button">LOCK</div>
         </div>
 
-        <!-- GAME -->
         <div id="game-container">
             <div id="ui-overlay">
                 <div class="ui-box" id="mode-display">WPN SYS: Missile</div>
@@ -242,7 +244,6 @@
             <canvas id="simCanvas" width="800" height="520" tabindex="0"></canvas>
         </div>
 
-        <!-- RIGHT: FIRE + JOYSTICK -->
         <div id="right-controls">
             <div id="fire-button" class="touch-button fire">FIRE</div>
             <div id="joystick-container">
@@ -257,13 +258,13 @@
     </div>
 
     <div id="controls-tip">
-        <span class="accent">STEER:</span> Arrow Keys or Right Joystick &nbsp;•&nbsp;
-        <span class="accent">LOCK:</span> SPACE or Left Button &nbsp;•&nbsp;
-        <span class="highlight">FIRE:</span> ENTER or Right Button
+        <span class="accent">STEER:</span> Arrow Keys / Joystick &nbsp;•&nbsp;
+        <span class="accent">LOCK:</span> SPACE / Left Button &nbsp;•&nbsp;
+        <span class="highlight">FIRE:</span> ENTER / Right Button
     </div>
 
 <script>
-// ==================== FULL GAME CODE ====================
+// ==================== ENGINE ARCHITECTURE ====================
 const canvas = document.getElementById('simCanvas');
 const ctx = canvas.getContext('2d', { alpha: true });
 const modeDisplay = document.getElementById('mode-display');
@@ -273,56 +274,91 @@ const integrityFill = document.getElementById('integrity-fill');
 const HUD_SHIFT_Y = 49;
 const RETICLE_CENTER_Y = 195 + HUD_SHIFT_Y;
 const PITCH_MULTIPLIER = 0.95;
-const DETECT_TOLERANCE = 24;
-const HUD_HALF_WIDTH = 99.75 * 0.98;
-const HUD_TOP = -105 - (195 * 0.05);
-const HUD_BOTTOM = 90;
-const HUD_HEIGHT = Math.abs(HUD_TOP) + HUD_BOTTOM;
-
-const cockpitImg = new Image();
-let imgLoaded = false;
-cockpitImg.onload = () => { imgLoaded = true; };
+const DETECT_TOLERANCE = 35; 
+const centerX = 400;
+const centerY = 195;
 
 let gameState = 'COCKPIT';
 const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
-const centerX = 400;
-const centerY = 195;
 
 let plane = {
     roll: 0,
     pitch: 0,
     driftX: 0,
     maxRoll: 0.28,
-    maxPitch: 175,
-    maxDrift: 320
+    maxPitch: 175
 };
 
 let targets = [];
 let missiles = [];
-let incomingMissiles = [];
-let particles = [];
 const maxTargets = 6;
-let waterScroll = 0;
-let integrity = 3;
-let lastAcridHitTime = 0;
 
-let playerPlane = {
-    isoX: -120,
-    isoY: -120,
-    isoZ: 260,
-    spinAngle: 0,
-    status: 'HIT',
-    fallSpeed: 2.1
-};
+// ==================== SIMULATION OBJECT CLASSES ====================
+class Target {
+    constructor(id) {
+        this.id = id;
+        this.reset();
+    }
+    reset() {
+        this.x = Math.random() * 400 + 200;
+        this.y = Math.random() * 150 + 100;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 1;
+        this.locked = false;
+        this.isoX = (Math.random() - 0.5) * 300;
+        this.isoY = canvas.height - 100;
+    }
+    update() {
+        if (gameState === 'COCKPIT') {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 100 || this.x > 700) this.vx *= -1;
+            if (this.y < 50 || this.y > 350) this.vy *= -1;
+        }
+    }
+}
 
-// ==================== TOUCH CONTROLS ====================
-const lockButton = document.getElementById('lock-button');
-const fireButton = document.getElementById('fire-button');
-const joystickContainer = document.getElementById('joystick-container');
-const joystickKnob = document.getElementById('joystick-knob');
+class Missile {
+    constructor(startX, startY, target) {
+        this.x = startX;
+        this.y = startY;
+        this.target = target;
+        this.speed = 7;
+        this.active = true;
+    }
+    update() {
+        if (this.target) {
+            let targetPos = gameState === 'COCKPIT' ? getTargetScreenPos(this.target) : {x: this.target.isoX, y: 150};
+            let dx = targetPos.x - this.x;
+            let dy = targetPos.y - this.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 10) {
+                this.active = false;
+                this.target.reset();
+            } else {
+                this.x += (dx / dist) * this.speed;
+                this.y += (dy / dist) * this.speed;
+            }
+        } else {
+            this.y -= this.speed;
+            if (this.y < 0) this.active = false;
+        }
+    }
+}
 
-let joystickActive = false;
+// Initialize Targets
+for (let i = 0; i < maxTargets; i++) {
+    targets.push(new Target(i));
+}
 
+function getTargetScreenPos(target) {
+    return {
+        x: target.x + (plane.roll * 400),
+        y: target.y + (plane.pitch * PITCH_MULTIPLIER)
+    };
+}
+
+// ==================== INPUT ACTIONS ====================
 function handleLock() {
     if (gameState !== 'COCKPIT') return;
     let closestDist = Infinity;
@@ -345,33 +381,41 @@ function handleLock() {
     }
 }
 
-if (lockButton) {
-    lockButton.addEventListener('click', handleLock);
-    lockButton.addEventListener('touchstart', (e) => { e.preventDefault(); handleLock(); });
-}
-
 function handleFire() {
-    if (gameState !== 'COCKPIT') return;
     let lockedTargets = targets.filter(t => t.locked);
-    gameState = 'ISOMETRIC';
-    modeDisplay.innerText = "MODE: TACTICAL ISOMETRIC MAP";
+    gameState = (gameState === 'COCKPIT') ? 'ISOMETRIC' : 'COCKPIT';
+    modeDisplay.innerText = gameState === 'COCKPIT' ? "WPN SYS: Missile" : "MODE: TACTICAL MAP";
 
     if (lockedTargets.length === 0) {
         for (let i = 0; i < 6; i++) {
-            missiles.push(new Missile(55 + (i * 110), canvas.height - 5, null));
+            missiles.push(new Missile(100 + (i * 110), canvas.height - 10, targets[i % targets.length]));
         }
     } else {
         lockedTargets.forEach((target, index) => {
-            missiles.push(new Missile(55 + (index * 110), canvas.height - 5, target));
+            missiles.push(new Missile(100 + (index * 110), canvas.height - 10, target));
         });
     }
     updateUI();
 }
 
-if (fireButton) {
-    fireButton.addEventListener('click', handleFire);
-    fireButton.addEventListener('touchstart', (e) => { e.preventDefault(); handleFire(); });
+function updateUI() {
+    let count = targets.filter(t => t.locked).length;
+    targetDisplay.innerText = `Missile COUPLING: ${count} / 6`;
 }
+
+// Attach Touch Events Safely
+const lockButton = document.getElementById('lock-button');
+const fireButton = document.getElementById('fire-button');
+
+lockButton.addEventListener('touchstart', (e) => { e.preventDefault(); handleLock(); }, { passive: false });
+fireButton.addEventListener('touchstart', (e) => { e.preventDefault(); handleFire(); }, { passive: false });
+lockButton.addEventListener('click', (e) => { e.preventDefault(); handleLock(); });
+fireButton.addEventListener('click', (e) => { e.preventDefault(); handleFire(); });
+
+// ==================== JOYSTICK LOGIC ====================
+const joystickContainer = document.getElementById('joystick-container');
+const joystickKnob = document.getElementById('joystick-knob');
+let joystickActive = false;
 
 function updateJoystick(clientX, clientY) {
     if (!joystickContainer || !joystickKnob) return;
@@ -381,19 +425,17 @@ function updateJoystick(clientX, clientY) {
 
     let dx = clientX - cx;
     let dy = clientY - cy;
-
-    const maxDistance = 50;
+    const maxDistance = 35;
     const distance = Math.sqrt(dx * dx + dy * dy);
+
     if (distance > maxDistance) {
-        const angle = Math.atan2(dy, dx);
-        dx = Math.cos(angle) * maxDistance;
-        dy = Math.sin(angle) * maxDistance;
+        dx = (dx / distance) * maxDistance;
+        dy = (dy / distance) * maxDistance;
     }
     joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
 
-    const sensitivity = 0.0048;
-    plane.pitch = Math.max(-plane.maxPitch, Math.min(plane.maxPitch, plane.pitch + (dy * sensitivity)));
-    plane.roll = Math.max(-plane.maxRoll, Math.min(plane.maxRoll, plane.roll + (dx * sensitivity * 0.85)));
+    plane.pitch += dy * 0.05;
+    plane.roll += dx * 0.0005;
 }
 
 function resetJoystick() {
@@ -401,75 +443,98 @@ function resetJoystick() {
     joystickActive = false;
 }
 
-if (joystickContainer) {
-    joystickContainer.addEventListener('mousedown', (e) => { joystickActive = true; updateJoystick(e.clientX, e.clientY); });
-    window.addEventListener('mousemove', (e) => { if (joystickActive) updateJoystick(e.clientX, e.clientY); });
-    window.addEventListener('mouseup', resetJoystick);
+joystickContainer.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    joystickActive = true;
+    updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
 
-    joystickContainer.addEventListener('touchstart', (e) => {
+window.addEventListener('touchmove', (e) => {
+    if (joystickActive) {
         e.preventDefault();
-        joystickActive = true;
         updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: false });
-
-    joystickContainer.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (joystickActive) updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: false });
-
-    joystickContainer.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        resetJoystick();
-    });
-}
-
-// ==================== GAME CLASSES & LOGIC ====================
-class Target {
-    constructor(id) { this.id = id; this.reset(); }
-    reset() {
-        this.x = Math.random() * 420 + 190;
-        this.y = Math.random() * 195 + 68;
-        this.vx = (Math.random() - 0.5) * 1.35;
-        this.vy = (Math.random() - 0.5) * 0.75;
-        this.size = 22;
-        this.locked = false;
-        this.isoX = (Math.random() - 0.5) * 200;
-        this.isoY = (Math.random() - 0.5) * 200;
-        this.isoZ = 285 + Math.random() * 35;
-        this.status = 'ALIVE';
-        this.spinAngle = Math.random() * Math.PI;
-        this.fallSpeed = 1.9;
-        this.range = 52 + Math.random() * 18;
-        this.closureRate = 0.78 + Math.random() * 0.42;
-        this.prevRange = this.range;
-        this.acridFired = false;
     }
-    update() { /* (same as previous full version - keeping it complete) */ }
-    drawCockpitRaw(isHot = false) { /* (same) */ }
-    drawIsometric() { /* (same) */ }
-}
+}, { passive: false });
 
-class IncomingMissile { /* (same classes as before) */ }
-class Missile { /* (same) */ }
-class Particle { /* (same) */ }
+window.addEventListener('touchend', resetJoystick);
 
-// Add all the remaining functions (getIncomingScreenPos, getTargetScreenPos, draw functions, updateUI, updatePlanePhysics, loop, init, key handlers)
-// For brevity in this response, the full working logic from our previous complete version is included below.
+// Mouse fallbacks
+joystickContainer.addEventListener('mousedown', (e) => { joystickActive = true; updateJoystick(e.clientX, e.clientY); });
+window.addEventListener('mousemove', (e) => { if (joystickActive) updateJoystick(e.clientX, e.clientY); });
+window.addEventListener('mouseup', resetJoystick);
 
-function getIncomingScreenPos(m) { /* ... */ }
-function getTargetScreenPos(target) { /* ... */ }
-// ... (All other functions: drawPlayerIsometric, drawMovingBackground, drawCockpitView, drawIsometricGrid, toIso, updateUI, updatePlanePhysics, loop, init, keyboard listeners)
+// Keyboard Handle
+window.addEventListener('keydown', (e) => {
+    if(e.code === 'Space') handleLock();
+    if(e.code === 'Enter') handleFire();
+    if(e.key in keys) keys[e.key] = true;
+});
+window.addEventListener('keyup', (e) => {
+    if(e.key in keys) keys[e.key] = false;
+});
 
-// ==================== ORIENTATION HANDLER ====================
-function handleOrientation() {
-    const wrapper = document.getElementById('game-wrapper');
-    if (!wrapper) return;
-    if (window.innerHeight < 500 && window.innerWidth > window.innerHeight) {
-        wrapper.style.flexDirection = 'column';
+// ==================== GAME ENGINE LOOP ====================
+function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Keyboard movement additions
+    if (keys.ArrowUp) plane.pitch -= 2;
+    if (keys.ArrowDown) plane.pitch += 2;
+    if (keys.ArrowLeft) plane.roll -= 0.005;
+    if (keys.ArrowRight) plane.roll += 0.005;
+
+    // Simulation Draw Cycles
+    if (gameState === 'COCKPIT') {
+        // Draw Retro Green Grid Horizon Line
+        ctx.strokeStyle = '#122334';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, centerY + plane.pitch);
+        ctx.lineTo(canvas.width, centerY + plane.pitch);
+        ctx.stroke();
+
+        // Draw HUD Locking Rings
+        ctx.strokeStyle = '#00ff9d';
+        ctx.beginPath();
+        ctx.arc(centerX, RETICLE_CENTER_Y, DETECT_TOLERANCE, 0, Math.PI * 2);
+        ctx.stroke();
+
+        targets.forEach(t => {
+            t.update();
+            let pos = getTargetScreenPos(t);
+            ctx.strokeStyle = t.locked ? '#ff4d4d' : '#00ff9d';
+            ctx.strokeRect(pos.x - 10, pos.y - 10, 20, 20);
+            if (t.locked) {
+                ctx.fillStyle = '#ff4d4d';
+                ctx.font = '9px monospace';
+                ctx.fillText("TRK LOCK", pos.x - 20, pos.y - 14);
+            }
+        });
     } else {
-        wrapper.style.flexDirection = 'row';
+        // Isometric / Tactical Map Rendering Mode
+        ctx.strokeStyle = '#1a2638';
+        for (let i = 0; i < canvas.width; i += 40) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+        }
+        targets.forEach(t => {
+            ctx.fillStyle = '#00ff9d';
+            ctx.fillRect(t.isoX + 300, 150, 12, 12);
+        });
     }
+
+    // Process Missiles Status
+    missiles = missiles.filter(m => m.active);
+    missiles.forEach(m => {
+        m.update();
+        ctx.fillStyle = '#ffaa00';
+        ctx.fillRect(m.x, m.y, 4, 10);
+    });
+
+    requestAnimationFrame(loop);
 }
 
-window.addEventListener('resize', handleOrientation);
-window.addEventListener('orientationchange', () => setTimeout(handleOrientation
+// Fire engine 
+loop();
+</script>
+</body>
+</html>
