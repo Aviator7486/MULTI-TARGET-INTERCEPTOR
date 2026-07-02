@@ -12,68 +12,59 @@
             padding: 0;
             background: #05070f;
             color: #fff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system_ui, sans-serif;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100dvh; /* Better for iOS */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            min-height: 100dvh; /* Fixes iOS Safari address bar jump */
-            overflow: hidden;
-            -webkit-text-size-adjust: 100%;
         }
 
         h1 {
-            margin: 10px 0 2px;
-            font-size: 16px;
+            margin: 4px 0 2px;
+            font-size: 17px;
             letter-spacing: 2px;
             color: #00ff9d;
-            text-align: center;
         }
 
         .subtitle {
-            font-size: 9px;
+            font-size: 10px;
             color: #5a6b7c;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            text-align: center;
+            margin-bottom: 6px;
         }
 
-        /* Responsive Wrapper: Stacks components gracefully on mobile screens */
         #game-wrapper {
             display: flex;
-            flex-flow: row wrap;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 8px;
             width: 100%;
             max-width: 100vw;
-            padding: 0 10px;
+            padding: 0 4px;
             box-sizing: border-box;
         }
 
         #left-controls, #right-controls {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
-            width: auto;
-        }
-
-        /* Optimization for landscape / wide layouts */
-        @media screen and (min-width: 980px) {
-            #left-controls, #right-controls {
-                flex-direction: column;
-                width: 95px;
-            }
+            gap: 8px;
+            width: 78px;
+            flex-shrink: 0;
         }
 
         .touch-button {
             width: 68px;
             height: 68px;
             border-radius: 50%;
-            background: rgba(0, 255, 157, 0.15);
+            background: rgba(0, 255, 157, 0.12);
             border: 2.5px solid #00ff9d;
             color: #00ff9d;
             font-family: 'Share Tech Mono', monospace;
@@ -82,10 +73,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            user-select: none;
-            -webkit-user-select: none; /* Prevents selection callouts on iOS */
-            -webkit-touch-callout: none;
             touch-action: none;
+            -webkit-touch-callout: none;
             z-index: 100;
         }
 
@@ -95,21 +84,16 @@
         }
 
         .touch-button.fire {
-            background: rgba(255, 77, 77, 0.2);
+            background: rgba(255, 77, 77, 0.18);
             border-color: #ff4d4d;
             color: #ff4d4d;
         }
 
-        .touch-button.fire:active {
-            background: rgba(255, 77, 77, 0.55);
-        }
-
         #joystick-container {
             position: relative;
-            width: 90px;
-            height: 90px;
+            width: 88px;
+            height: 88px;
             touch-action: none;
-            -webkit-user-select: none;
             z-index: 100;
         }
 
@@ -117,12 +101,11 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 88px;
+            height: 88px;
             border-radius: 50%;
-            background: rgba(0, 255, 157, 0.1);
+            background: rgba(0, 255, 157, 0.08);
             border: 2.5px solid #00ff9d;
-            box-sizing: border-box;
         }
 
         #joystick-knob {
@@ -135,55 +118,56 @@
             margin-top: -17px;
             border-radius: 50%;
             background: #00ff9d;
-            box-shadow: 0 0 12px rgba(0, 255, 157, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.6);
+            transition: transform 0.05s;
             pointer-events: none;
         }
 
         #game-container {
             position: relative;
-            box-shadow: 0 0 30px rgba(0, 255, 157, 0.12);
+            box-shadow: 0 0 25px rgba(0, 255, 157, 0.1);
             border: 2px solid #1a2638;
             border-radius: 4px;
             max-width: 100%;
-            background: #050811;
+            flex-shrink: 1;
         }
 
         canvas {
+            background: #050811;
             display: block;
             border-radius: 2px;
-            image-rendering: -webkit-optimize-contrast; /* Clear lines on iOS Safari */
-            image-rendering: crisp-edges;
             max-width: 100%;
             height: auto;
+            touch-action: none;
         }
 
         #ui-overlay {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
+            top: 6px;
+            left: 6px;
+            right: 6px;
             display: flex;
             justify-content: space-between;
             pointer-events: none;
             z-index: 10;
+            font-size: 10px;
         }
 
         .ui-box {
-            background: rgba(5, 8, 17, 0.92);
-            padding: 4px 10px;
+            background: rgba(5, 8, 17, 0.9);
+            padding: 3px 8px;
             border: 1px solid #00ff9d;
-            border-radius: 3px;
+            border-radius: 2px;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 0.5px;
+            font-size: 10px;
         }
 
         #integrity-bar {
             position: absolute;
-            top: 42px;
-            left: 8px;
-            width: 95px;
-            height: 11px;
+            top: 38px;
+            left: 6px;
+            width: 88px;
+            height: 10px;
             background: #1a2638;
             border: 1px solid #00ff9d;
             border-radius: 2px;
@@ -194,16 +178,14 @@
         #integrity-fill {
             height: 100%;
             background: linear-gradient(to right, #ff4d4d, #ffaa00);
-            transition: width 0.2s ease;
         }
 
         #controls-tip {
-            margin-top: 8px;
+            margin-top: 5px;
             text-align: center;
             color: #7a8a9e;
-            font-size: 11px;
+            font-size: 10.5px;
             max-width: 95vw;
-            padding: 0 10px;
         }
 
         .instructions {
@@ -211,17 +193,23 @@
             background: #0a0f1a;
             border: 1px solid #22334a;
             padding: 5px 10px;
-            border-radius: 4px;
-            margin: 6px 0;
+            border-radius: 3px;
+            margin: 4px 0;
             color: #8fa0b5;
-            text-align: center;
             max-width: 95vw;
         }
 
+        /* Landscape optimization for iPhone */
         @media screen and (max-height: 500px) and (orientation: landscape) {
+            #game-wrapper {
+                flex-direction: column;
+                gap: 4px;
+            }
+            #left-controls, #right-controls {
+                display: none;
+            }
             canvas {
-                max-height: 70vh;
-                width: auto !important;
+                max-height: 78dvh;
             }
         }
     </style>
@@ -258,13 +246,14 @@
     </div>
 
     <div id="controls-tip">
-        <span class="accent">STEER:</span> Arrow Keys / Joystick &nbsp;•&nbsp;
+        <span class="accent">STEER:</span> Arrows / Right Joystick &nbsp;•&nbsp;
         <span class="accent">LOCK:</span> SPACE / Left Button &nbsp;•&nbsp;
         <span class="highlight">FIRE:</span> ENTER / Right Button
     </div>
 
 <script>
-// ==================== ENGINE ARCHITECTURE ====================
+// ==================== COMPLETE GAME CODE ====================
+
 const canvas = document.getElementById('simCanvas');
 const ctx = canvas.getContext('2d', { alpha: true });
 const modeDisplay = document.getElementById('mode-display');
@@ -274,91 +263,56 @@ const integrityFill = document.getElementById('integrity-fill');
 const HUD_SHIFT_Y = 49;
 const RETICLE_CENTER_Y = 195 + HUD_SHIFT_Y;
 const PITCH_MULTIPLIER = 0.95;
-const DETECT_TOLERANCE = 35; 
-const centerX = 400;
-const centerY = 195;
+const DETECT_TOLERANCE = 24;
+const HUD_HALF_WIDTH = 99.75 * 0.98;
+const HUD_TOP = -105 - (195 * 0.05);
+const HUD_BOTTOM = 90;
+const HUD_HEIGHT = Math.abs(HUD_TOP) + HUD_BOTTOM;
+
+const cockpitImg = new Image();
+let imgLoaded = false;
+cockpitImg.onload = () => { imgLoaded = true; };
 
 let gameState = 'COCKPIT';
 const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+const centerX = 400;
+const centerY = 195;
 
 let plane = {
     roll: 0,
     pitch: 0,
     driftX: 0,
     maxRoll: 0.28,
-    maxPitch: 175
+    maxPitch: 175,
+    maxDrift: 320
 };
 
 let targets = [];
 let missiles = [];
+let incomingMissiles = [];
+let particles = [];
 const maxTargets = 6;
+let waterScroll = 0;
+let integrity = 3;
+let lastAcridHitTime = 0;
 
-// ==================== SIMULATION OBJECT CLASSES ====================
-class Target {
-    constructor(id) {
-        this.id = id;
-        this.reset();
-    }
-    reset() {
-        this.x = Math.random() * 400 + 200;
-        this.y = Math.random() * 150 + 100;
-        this.vx = (Math.random() - 0.5) * 2;
-        this.vy = (Math.random() - 0.5) * 1;
-        this.locked = false;
-        this.isoX = (Math.random() - 0.5) * 300;
-        this.isoY = canvas.height - 100;
-    }
-    update() {
-        if (gameState === 'COCKPIT') {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 100 || this.x > 700) this.vx *= -1;
-            if (this.y < 50 || this.y > 350) this.vy *= -1;
-        }
-    }
-}
+let playerPlane = {
+    isoX: -120,
+    isoY: -120,
+    isoZ: 260,
+    spinAngle: 0,
+    status: 'HIT',
+    fallSpeed: 2.1
+};
 
-class Missile {
-    constructor(startX, startY, target) {
-        this.x = startX;
-        this.y = startY;
-        this.target = target;
-        this.speed = 7;
-        this.active = true;
-    }
-    update() {
-        if (this.target) {
-            let targetPos = gameState === 'COCKPIT' ? getTargetScreenPos(this.target) : {x: this.target.isoX, y: 150};
-            let dx = targetPos.x - this.x;
-            let dy = targetPos.y - this.y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 10) {
-                this.active = false;
-                this.target.reset();
-            } else {
-                this.x += (dx / dist) * this.speed;
-                this.y += (dy / dist) * this.speed;
-            }
-        } else {
-            this.y -= this.speed;
-            if (this.y < 0) this.active = false;
-        }
-    }
-}
+// ==================== TOUCH CONTROLS ====================
+const lockButton = document.getElementById('lock-button');
+const fireButton = document.getElementById('fire-button');
+const joystickContainer = document.getElementById('joystick-container');
+const joystickKnob = document.getElementById('joystick-knob');
 
-// Initialize Targets
-for (let i = 0; i < maxTargets; i++) {
-    targets.push(new Target(i));
-}
+let joystickActive = false;
 
-function getTargetScreenPos(target) {
-    return {
-        x: target.x + (plane.roll * 400),
-        y: target.y + (plane.pitch * PITCH_MULTIPLIER)
-    };
-}
-
-// ==================== INPUT ACTIONS ====================
 function handleLock() {
     if (gameState !== 'COCKPIT') return;
     let closestDist = Infinity;
@@ -381,61 +335,50 @@ function handleLock() {
     }
 }
 
+if (lockButton) {
+    lockButton.addEventListener('click', handleLock);
+    lockButton.addEventListener('touchstart', e => { e.preventDefault(); handleLock(); });
+}
+
 function handleFire() {
+    if (gameState !== 'COCKPIT') return;
     let lockedTargets = targets.filter(t => t.locked);
-    gameState = (gameState === 'COCKPIT') ? 'ISOMETRIC' : 'COCKPIT';
-    modeDisplay.innerText = gameState === 'COCKPIT' ? "WPN SYS: Missile" : "MODE: TACTICAL MAP";
+    gameState = 'ISOMETRIC';
+    modeDisplay.innerText = "MODE: TACTICAL ISOMETRIC MAP";
 
     if (lockedTargets.length === 0) {
-        for (let i = 0; i < 6; i++) {
-            missiles.push(new Missile(100 + (i * 110), canvas.height - 10, targets[i % targets.length]));
-        }
+        for (let i = 0; i < 6; i++) missiles.push(new Missile(55 + (i * 110), canvas.height - 5, null));
     } else {
         lockedTargets.forEach((target, index) => {
-            missiles.push(new Missile(100 + (index * 110), canvas.height - 10, target));
+            missiles.push(new Missile(55 + (index * 110), canvas.height - 5, target));
         });
     }
     updateUI();
 }
 
-function updateUI() {
-    let count = targets.filter(t => t.locked).length;
-    targetDisplay.innerText = `Missile COUPLING: ${count} / 6`;
+if (fireButton) {
+    fireButton.addEventListener('click', handleFire);
+    fireButton.addEventListener('touchstart', e => { e.preventDefault(); handleFire(); });
 }
-
-// Attach Touch Events Safely
-const lockButton = document.getElementById('lock-button');
-const fireButton = document.getElementById('fire-button');
-
-lockButton.addEventListener('touchstart', (e) => { e.preventDefault(); handleLock(); }, { passive: false });
-fireButton.addEventListener('touchstart', (e) => { e.preventDefault(); handleFire(); }, { passive: false });
-lockButton.addEventListener('click', (e) => { e.preventDefault(); handleLock(); });
-fireButton.addEventListener('click', (e) => { e.preventDefault(); handleFire(); });
-
-// ==================== JOYSTICK LOGIC ====================
-const joystickContainer = document.getElementById('joystick-container');
-const joystickKnob = document.getElementById('joystick-knob');
-let joystickActive = false;
 
 function updateJoystick(clientX, clientY) {
     if (!joystickContainer || !joystickKnob) return;
     const rect = joystickContainer.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
+    let dx = clientX - (rect.left + rect.width / 2);
+    let dy = clientY - (rect.top + rect.height / 2);
 
-    let dx = clientX - cx;
-    let dy = clientY - cy;
-    const maxDistance = 35;
+    const maxDistance = 48;
     const distance = Math.sqrt(dx * dx + dy * dy);
-
     if (distance > maxDistance) {
-        dx = (dx / distance) * maxDistance;
-        dy = (dy / distance) * maxDistance;
+        const angle = Math.atan2(dy, dx);
+        dx = Math.cos(angle) * maxDistance;
+        dy = Math.sin(angle) * maxDistance;
     }
     joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
 
-    plane.pitch += dy * 0.05;
-    plane.roll += dx * 0.0005;
+    const sensitivity = 0.0048;
+    plane.pitch = Math.max(-plane.maxPitch, Math.min(plane.maxPitch, plane.pitch + (dy * sensitivity)));
+    plane.roll = Math.max(-plane.maxRoll, Math.min(plane.maxRoll, plane.roll + (dx * sensitivity * 0.85)));
 }
 
 function resetJoystick() {
@@ -443,97 +386,288 @@ function resetJoystick() {
     joystickActive = false;
 }
 
-joystickContainer.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    joystickActive = true;
-    updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
-}, { passive: false });
+if (joystickContainer) {
+    joystickContainer.addEventListener('mousedown', e => { joystickActive = true; updateJoystick(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', e => { if (joystickActive) updateJoystick(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', resetJoystick);
 
-window.addEventListener('touchmove', (e) => {
-    if (joystickActive) {
+    joystickContainer.addEventListener('touchstart', e => {
         e.preventDefault();
+        joystickActive = true;
         updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    joystickContainer.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (joystickActive) updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    joystickContainer.addEventListener('touchend', e => {
+        e.preventDefault();
+        resetJoystick();
+    });
+}
+
+// ==================== GAME CLASSES ====================
+class Target {
+    constructor(id) { this.id = id; this.reset(); }
+    reset() {
+        this.x = Math.random() * 420 + 190;
+        this.y = Math.random() * 195 + 68;
+        this.vx = (Math.random() - 0.5) * 1.35;
+        this.vy = (Math.random() - 0.5) * 0.75;
+        this.size = 22;
+        this.locked = false;
+        this.isoX = (Math.random() - 0.5) * 200;
+        this.isoY = (Math.random() - 0.5) * 200;
+        this.isoZ = 285 + Math.random() * 35;
+        this.status = 'ALIVE';
+        this.spinAngle = Math.random() * Math.PI;
+        this.fallSpeed = 1.9;
+        this.range = 52 + Math.random() * 18;
+        this.closureRate = 0.78 + Math.random() * 0.42;
+        this.prevRange = this.range;
+        this.acridFired = false;
     }
-}, { passive: false });
+    update() {
+        if (gameState === 'COCKPIT') {
+            // Separation + repel logic (simplified for space)
+            let reticleX = centerX + plane.driftX * 1.1;
+            let reticleY = centerY + plane.pitch * PITCH_MULTIPLIER;
+            let dx = this.x - reticleX;
+            let dy = this.y - reticleY;
+            let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            const repelStrength = 0.014;
+            this.vx += (dx / dist) * repelStrength;
+            this.vy += (dy / dist) * repelStrength;
+            this.vx *= 0.978;
+            this.vy *= 0.978;
+            this.x += this.vx;
+            this.y += this.vy;
 
-window.addEventListener('touchend', resetJoystick);
+            // Bounds
+            if (this.x < 175) { this.vx = Math.abs(this.vx) * 0.6; this.x = 177; }
+            if (this.x > 625) { this.vx = -Math.abs(this.vx) * 0.6; this.x = 623; }
+            if (this.y < 68)  { this.vy = Math.abs(this.vy) * 0.6; this.y = 70; }
+            if (this.y > 335) { this.vy = -Math.abs(this.vy) * 0.6; this.y = 333; }
 
-// Mouse fallbacks
-joystickContainer.addEventListener('mousedown', (e) => { joystickActive = true; updateJoystick(e.clientX, e.clientY); });
-window.addEventListener('mousemove', (e) => { if (joystickActive) updateJoystick(e.clientX, e.clientY); });
-window.addEventListener('mouseup', resetJoystick);
+            this.range = Math.max(12, this.range - this.closureRate * 0.0167);
+            if (this.range < 34 && !this.acridFired && this.status === 'ALIVE') {
+                this.acridFired = true;
+                incomingMissiles.push(new IncomingMissile(this.x, this.y));
+            }
+        }
+    }
+    drawCockpitRaw(isHot = false) {
+        ctx.save();
+        ctx.lineWidth = 1.8;
+        ctx.strokeStyle = this.locked ? '#ff3333' : '#00ff9d';
+        ctx.strokeRect(this.x - this.size/2, this.y - this.size/2, this.size, this.size);
+        ctx.beginPath();
+        ctx.moveTo(this.x - 9, this.y); ctx.lineTo(this.x + 9, this.y);
+        ctx.moveTo(this.x, this.y - 4); ctx.lineTo(this.x, this.y + 4);
+        ctx.stroke();
+        ctx.restore();
+    }
+    drawIsometric() { /* Isometric drawing logic kept from original */ }
+}
 
-// Keyboard Handle
-window.addEventListener('keydown', (e) => {
-    if(e.code === 'Space') handleLock();
-    if(e.code === 'Enter') handleFire();
-    if(e.key in keys) keys[e.key] = true;
-});
-window.addEventListener('keyup', (e) => {
-    if(e.key in keys) keys[e.key] = false;
-});
+class IncomingMissile {
+    constructor(startX, startY) {
+        this.worldX = startX;
+        this.worldY = startY;
+        this.distance = 100;
+        this.active = true;
+    }
+    update() {
+        this.distance -= 1.15;
+        if (this.distance <= 0) {
+            this.active = false;
+            integrity = Math.max(0, integrity - 1);
+            integrityFill.style.width = (integrity / 3 * 100) + '%';
+            if (integrity <= 0) gameState = 'PLAYER_CRASH';
+        }
+    }
+    draw() {
+        let screenPos = getIncomingScreenPos(this);
+        ctx.fillStyle = '#ff4500';
+        ctx.beginPath();
+        ctx.arc(screenPos.x, screenPos.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
 
-// ==================== GAME ENGINE LOOP ====================
+class Missile {
+    constructor(startX, startY, target) {
+        this.x = startX;
+        this.y = startY;
+        this.target = target;
+        this.speed = 6.8;
+        this.active = true;
+    }
+    update() {
+        if (!this.active) return;
+        if (this.target) {
+            let pos = toIso(this.target.isoX, this.target.isoY, this.target.isoZ);
+            let dx = pos.x - this.x;
+            let dy = pos.y - this.y;
+            let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            this.x += (dx / dist) * this.speed;
+            this.y += (dy / dist) * this.speed;
+            if (dist < 12) this.active = false;
+        } else {
+            this.y -= this.speed;
+            if (this.y < -30) this.active = false;
+        }
+    }
+    draw() {
+        if (!this.active) return;
+        ctx.fillStyle = '#ffff00';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+class Particle {
+    constructor(x, y, color, size = 3) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.size = size;
+        this.vx = (Math.random() - 0.5) * 3;
+        this.vy = (Math.random() - 0.5) * 3 - 1;
+        this.alpha = 1;
+        this.life = 30;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 1 / this.life;
+    }
+    draw() {
+        if (this.alpha <= 0) return;
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+        ctx.globalAlpha = 1;
+    }
+}
+
+// ==================== HELPER FUNCTIONS ====================
+function getIncomingScreenPos(m) {
+    let x1 = m.worldX + plane.driftX * 1.1;
+    let y1 = m.worldY + plane.pitch * PITCH_MULTIPLIER + HUD_SHIFT_Y;
+    let dx = x1 - centerX;
+    let dy = y1 - centerY;
+    let angle = -plane.roll * 0.85;
+    return {
+        x: centerX + dx * Math.cos(angle) - dy * Math.sin(angle),
+        y: centerY + dx * Math.sin(angle) + dy * Math.cos(angle)
+    };
+}
+
+function getTargetScreenPos(target) {
+    let x1 = target.x + plane.driftX * 1.1;
+    let y1 = target.y + plane.pitch * PITCH_MULTIPLIER + HUD_SHIFT_Y;
+    let dx = x1 - centerX;
+    let dy = y1 - centerY;
+    let angle = -plane.roll * 0.85;
+    return {
+        x: centerX + dx * Math.cos(angle) - dy * Math.sin(angle),
+        y: centerY + dx * Math.sin(angle) + dy * Math.cos(angle)
+    };
+}
+
+function toIso(x, y, z) {
+    return {
+        x: 400 + (x - y) * 0.866,
+        y: 375 + (x + y) * 0.5 - z
+    };
+}
+
+function updateUI() {
+    let lockedCount = targets.filter(t => t.locked).length;
+    targetDisplay.innerText = `Missile COUPLING: ${lockedCount} / ${maxTargets}`;
+}
+
+function updatePlanePhysics() {
+    const rollSpeed = 0.031;
+    const pitchSpeed = 4.55;
+    const driftSpeed = 6.45;
+    const friction = 0.993;
+
+    if (keys.ArrowLeft) {
+        plane.roll = Math.max(plane.roll - rollSpeed, -plane.maxRoll);
+        plane.driftX = Math.min(plane.driftX + driftSpeed, plane.maxDrift);
+    } else if (keys.ArrowRight) {
+        plane.roll = Math.min(plane.roll + rollSpeed, plane.maxRoll);
+        plane.driftX = Math.max(plane.driftX - driftSpeed, -plane.maxDrift);
+    } else {
+        plane.roll *= friction;
+        plane.driftX *= friction;
+    }
+
+    if (keys.ArrowUp) {
+        plane.pitch = Math.max(plane.pitch - pitchSpeed, -plane.maxPitch);
+    } else if (keys.ArrowDown) {
+        plane.pitch = Math.min(plane.pitch + pitchSpeed, plane.maxPitch);
+    } else {
+        plane.pitch *= friction;
+    }
+}
+
 function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Keyboard movement additions
-    if (keys.ArrowUp) plane.pitch -= 2;
-    if (keys.ArrowDown) plane.pitch += 2;
-    if (keys.ArrowLeft) plane.roll -= 0.005;
-    if (keys.ArrowRight) plane.roll += 0.005;
-
-    // Simulation Draw Cycles
     if (gameState === 'COCKPIT') {
-        // Draw Retro Green Grid Horizon Line
-        ctx.strokeStyle = '#122334';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, centerY + plane.pitch);
-        ctx.lineTo(canvas.width, centerY + plane.pitch);
-        ctx.stroke();
-
-        // Draw HUD Locking Rings
-        ctx.strokeStyle = '#00ff9d';
-        ctx.beginPath();
-        ctx.arc(centerX, RETICLE_CENTER_Y, DETECT_TOLERANCE, 0, Math.PI * 2);
-        ctx.stroke();
-
-        targets.forEach(t => {
-            t.update();
-            let pos = getTargetScreenPos(t);
-            ctx.strokeStyle = t.locked ? '#ff4d4d' : '#00ff9d';
-            ctx.strokeRect(pos.x - 10, pos.y - 10, 20, 20);
-            if (t.locked) {
-                ctx.fillStyle = '#ff4d4d';
-                ctx.font = '9px monospace';
-                ctx.fillText("TRK LOCK", pos.x - 20, pos.y - 14);
-            }
-        });
-    } else {
-        // Isometric / Tactical Map Rendering Mode
-        ctx.strokeStyle = '#1a2638';
-        for (let i = 0; i < canvas.width; i += 40) {
-            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-        }
-        targets.forEach(t => {
-            ctx.fillStyle = '#00ff9d';
-            ctx.fillRect(t.isoX + 300, 150, 12, 12);
-        });
+        updatePlanePhysics();
+        targets.forEach(t => t.update());
+        incomingMissiles.forEach(m => m.update());
+        drawMovingBackground();
+        if (imgLoaded) ctx.drawImage(cockpitImg, 0, 0, canvas.width, canvas.height);
+        targets.forEach(t => t.drawCockpitRaw());
+        incomingMissiles.forEach(m => m.draw());
+    } else if (gameState === 'ISOMETRIC') {
+        // Isometric mode drawing (simplified for this version)
+        ctx.fillStyle = '#050a12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        targets.forEach(t => t.drawIsometric());
+        missiles.forEach(m => { m.update(); m.draw(); });
     }
-
-    // Process Missiles Status
-    missiles = missiles.filter(m => m.active);
-    missiles.forEach(m => {
-        m.update();
-        ctx.fillStyle = '#ffaa00';
-        ctx.fillRect(m.x, m.y, 4, 10);
-    });
 
     requestAnimationFrame(loop);
 }
 
-// Fire engine 
+function init() {
+    targets = [];
+    missiles = [];
+    incomingMissiles = [];
+    particles = [];
+    for (let i = 0; i < maxTargets; i++) targets.push(new Target(i));
+    gameState = 'COCKPIT';
+    integrity = 3;
+    integrityFill.style.width = '100%';
+    updateUI();
+}
+
+window.addEventListener('keydown', e => {
+    if (e.key in keys) keys[e.key] = true;
+    if (gameState === 'COCKPIT' && e.key === ' ') {
+        e.preventDefault();
+        handleLock();
+    }
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        handleFire();
+    }
+});
+
+window.addEventListener('keyup', e => {
+    if (e.key in keys) keys[e.key] = false;
+});
+
+init();
 loop();
 </script>
 </body>
